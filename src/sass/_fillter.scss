@@ -1,0 +1,156 @@
+@import "variables";
+
+.logo {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header {
+  background: $orange;
+  @include border-radius(10px 10px 0 0 );
+  position: relative;
+}
+
+.filter-app {
+  margin-top: 100px;
+  position: relative;
+}
+
+.filter-app__title {
+  color: $white;
+  font-size: 16px;
+  padding: 12px 15px;
+}
+
+.filter-app__close {
+  background: url("../img/close.png") no-repeat;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  top: 17px;
+  right: 13px;
+  cursor: pointer;
+}
+
+.friend-lists__list_right {
+  border-left: 1px solid $light-grey;
+}
+
+.search-panel {
+  background: $light-grey;
+}
+
+.search-panel__block {
+  position: relative;
+   &:before {
+     content: "";
+     background: url('../img/search.png') no-repeat;
+     position: absolute;
+     width: 13px;
+     height: 15px;
+     top: 16px;
+     left: 22px;
+  }
+}
+
+.search-panel__input {
+  outline: none;
+  border: 2px solid transparent;
+  @include border-radius(16px);
+  margin: 10px 15px;
+  padding: 3px 25px;
+  font-size: 12px;
+  font-family: "FiraSansLight", Arial, sans-serif;
+  width: 90%;
+
+
+  &:hover,
+  &:focus {
+    border: 2px solid #ff8663;
+  }
+}
+
+.friend-lists {
+  background: $white;
+}
+
+.list__title {
+  font-size: 12px;
+  padding: 10px 0;
+  margin: 0 auto;
+  width: 90%;
+  border-bottom: 1px solid $light-grey;
+  cursor: default;
+}
+
+.list__items {
+  height: 320px;
+  padding: 0 15px;
+  overflow: auto;
+  font-size: 12px;
+}
+
+.list__item {
+  padding: 5px 0;
+  border-bottom: 1px solid $light-grey;
+  cursor: pointer;
+  position: relative;
+  &:hover {
+    background: $light-grey;
+  }
+}
+
+.list__avatar {
+  @include border-radius(50%);
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  width: 45px;
+  margin-left: 7px;
+  margin-right: 5px;
+}
+
+.list__name {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.list__plus {
+  position: absolute;
+  display: inline-block;
+  top: 20px;
+  right: 5px;
+  width: 16px;
+  height: 16px;
+  background: url("../img/add.png") no-repeat;
+}
+
+.list__remove {
+  position: absolute;
+  display: inline-block;
+  top: 20px;
+  right: 5px;
+  width: 16px;
+  height: 16px;
+  background: url("../img/remove.png") no-repeat;
+}
+
+.footer {
+  background: $light-grey;
+  @include border-radius(0 0 10px 10px )
+}
+
+.button__save {
+  outline: none;
+  margin: 8px;
+  padding: 6px 15px;
+  border: none;
+  @include border-radius(10px);
+  color: $white;
+  background: $orange;
+  font-size: 12px;
+  font-family: "FiraSansLight", Arial, sans-serif;
+  float: right;
+}

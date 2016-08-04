@@ -1,0 +1,38 @@
+doctype html
+html(lang="ru")
+	title Другофильтр
+	meta(charset="UTF-8")
+	meta(http-equiv="X-UA-Compatible" content="IE=edge")
+	meta(name="vieport" content="device-width")
+	link(rel="stylesheet" type="text/css" href="css/style.css")
+	script(src="http://vk.com/js/api/openapi.js" type="text/javascript")
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js")
+	body
+		.wrapper
+			.main-content
+				.filter-app
+					img.logo(src="img/logo.png")
+					.header
+						.container
+							.filter-app__title Выберите друзей
+							a.filter-app__close(href="logout")
+					.search-panel
+						.container
+							.search-panel__block.search-panel__block_left
+								input(class="search-panel__input search-panel__input_left" type="text" placeholder="Начните вводить имя друга")
+							.search-panel__block.search-panel__block_right
+								input(class="search-panel__input search-panel__input_right" type="text" placeholder="Название")
+					.friend-lists
+						.container
+							.friend-lists__list.friend-lists__list_left
+								.list__title Ваши друзья
+								.list__items
+							.friend-lists__list.friend-lists__list_right
+								.list__title Друзья в списке
+								.list__items
+					.footer
+						.container
+							button(class="button__save" type="button") Сохранить
+		include partials/_templates
+		script(src="js/index.js")
+
