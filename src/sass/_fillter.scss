@@ -25,13 +25,18 @@
 }
 
 .filter-app__close {
-  background: url("../img/close.png") no-repeat;
+
+  background-color: $white;
+  -webkit-mask-image: url("../svg/plus.svg");
+  mask-image: url("../svg/plus.svg");
+
   position: absolute;
-  width: 14px;
-  height: 14px;
-  top: 17px;
+  width: 16px;
+  height: 16px;
+  top: 16px;
   right: 13px;
   cursor: pointer;
+  transform: rotate(45deg);
 }
 
 .friend-lists__list_right {
@@ -46,11 +51,13 @@
   position: relative;
    &:before {
      content: "";
-     background: url('../img/search.png') no-repeat;
+     background-color: $gray;
+     -webkit-mask-image: url("../svg/search.svg");
+     mask-image: url("../svg/search.svg");
      position: absolute;
-     width: 13px;
-     height: 15px;
-     top: 16px;
+     width: 14px;
+     height: 14px;
+     top: 17px;
      left: 22px;
   }
 }
@@ -124,7 +131,9 @@
   right: 5px;
   width: 16px;
   height: 16px;
-  background: url("../img/add.png") no-repeat;
+  background-color: $gray;
+  -webkit-mask-image: url("../svg/plus.svg");
+  mask-image: url("../svg/plus.svg");
 }
 
 .list__remove {
@@ -134,7 +143,10 @@
   right: 5px;
   width: 16px;
   height: 16px;
-  background: url("../img/remove.png") no-repeat;
+  background-color: $gray;
+  -webkit-mask-image: url("../svg/plus.svg");
+  mask-image: url("../svg/plus.svg");
+  transform: rotate(45deg);
 }
 
 .footer {

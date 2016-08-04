@@ -31,12 +31,11 @@ function getFriends(objA, objB) {
         }
     }
     return objA;
-
 }
 
 function renderTemplate(obj, panel, status) {
 
-    // module template (ui)
+    // module ui (template)
 
     if (obj.response) {
 
@@ -52,7 +51,7 @@ function renderTemplate(obj, panel, status) {
 
 function searchFriend(object, keyword) {
 
-    // module search (ui)
+    // module ui (search)
 
     let array = [];
 
@@ -93,19 +92,32 @@ function closeApp(e) {
 
     listsFriends[0].innerHTML = '';
     listsFriends[1].innerHTML = '';
-
+    clearInputs()
+    
     VK.Auth.logout();
     alert('You leave the app!');
     e.preventDefault();
 }
 
 
+function clearInputs() {
+
+    // module ui (inputs)
+
+    let inputs = document.querySelectorAll('input');
+
+    for (let i=0; i< inputs.length; i++) {
+        if (inputs[i].value) {
+            inputs[i].value = '';
+        }
+    }
+}
+
 function moveFriends(e) {
     
     if (e.target && e.target.tagName == "A" || e.uid) {
 
-        let item;
-        let mode;
+        let item, mode;
 
         if (e.target) {
             item = e.target.parentNode;
@@ -148,11 +160,11 @@ function moveFriends(e) {
 
         reSortFriends();
         reRenderTemplates();
+        clearInputs();
 
         if (e.target) {
             e.preventDefault();
         }
-
     }
 }
 
