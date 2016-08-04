@@ -1,16 +1,7 @@
-script(type="text/x-handlebars-template" id="friendsTemplate")
+script(type="text/x-handlebars-template" id="template")
 	{{#each friend}}
 	.list__item(draggable="true" data-uid="{{id}}")
 		img.list__avatar(draggable="false" src="{{photo_50}}")
 		.list__name {{first_name}} {{last_name}}
-		a.list__plus(href="javascript:void(0);")
+		a(href="javascript:void(0);" class="list__{{../mode}}")
 	{{/each}}
-
-script(type="text/x-handlebars-template" id="selectedFriendsTemplate")
-	{{#each friend}}
-	.list__item(draggable="true" data-uid="{{id}}")
-		img.list__avatar(draggable="false" src="{{photo_50}}")
-		.list__name {{first_name}} {{last_name}}
-		a.list__remove(href="javascript:void(0);")
-	{{/each}}
-

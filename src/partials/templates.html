@@ -1,0 +1,12 @@
+
+<script type="text/x-handlebars-template" id="friendsTemplate">{{#each friend}}
+  <div draggable="true" data-uid="{{id}}" class="list__item"><img draggable="false" src="{{photo_50}}" class="list__avatar"/>
+    <div class="list__name">{{first_name}} {{last_name}}</div><a href="add" class="list__plus"></a>
+  </div>{{/each}}
+</script>
+<script type="text/x-handlebars-template" id="friendsFilteredTemplate">{{#each friend2}}
+  <div draggable="true" data-uid="{{id}}" class="list__item"><img draggable="false" src="{{photo_50}}" class="list__avatar"/>
+    <div class="list__name">{{first_name}} {{last_name}}</div>
+    <div class="list__remove"></div>
+  </div>{{/each}}
+</script>

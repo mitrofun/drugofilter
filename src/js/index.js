@@ -45,18 +45,18 @@ function initData(obj) {
     }
 }
 
-function renderTemplate(obj, panel, templateName) {
+function renderTemplate(obj, panel, status) {
 
     // module template (ui)
 
     if (obj.response) {
 
-        let friendsTemplate = document.getElementById(templateName);
+        let friendsTemplate = document.getElementById('template');
         let friendsList = document.querySelector(`.friend-lists__list_${panel} .list__items`);
 
         let source = friendsTemplate.innerHTML;
         let template = Handlebars.compile(source);
-        friendsList.innerHTML = template({friend: obj.response.items});
+        friendsList.innerHTML = template({friend: obj.response.items, mode: status});
     }
 
 }
@@ -107,38 +107,54 @@ function closeApp(e) {
     listsFriends[1].innerHTML = '';
 
     VK.Auth.logout();
-
+    alert('You leave the app!');
     e.preventDefault();
 }
 
 
-function addSelectedFriends(e) {
-
-    if ((e.target && e.target.tagName == "A") || 'uid' in e) {
+function moveFriends(e) {
+    
+    if (e.target && e.target.tagName == "A" || e.uid) {
 
         let item;
+        let mode;
+
         if (e.target) {
             item = e.target.parentNode;
+            mode = e.target.className.split('__')[1];
         } else {
             item = {
                 dataset: {
                     uid: e.uid
                 }
-            }
+            };
+            mode = e.mode;
         }
 
-        for (let i = friends.response.items.length - 1; i >= 0; i--) {
-            let friend = friends.response.items[i];
+        let source, receiver;
 
-            if (item.dataset.uid == friend.id || e.uid == friend.id ) {
+        if (mode == 'plus') {
+            source = friends;
+            receiver = selectedFriends;
+        } else if (mode == 'remove') {
+            source = selectedFriends;
+            receiver = friends;
+        }
 
-                let index = friends.response.items.indexOf(friend);
 
-                friends.response.items.splice(index, 1);
-                friends.response.count --;
+        for (let i = source.response.items.length - 1; i >= 0; i--) {
 
-                selectedFriends.response.items.push(friend);
-                selectedFriends.response.count ++;
+            let friend = source.response.items[i];
+
+            if (item.dataset.uid == friend.id) {
+
+                let index = source.response.items.indexOf(friend);
+
+                source.response.items.splice(index, 1);
+                source.response.count --;
+
+                receiver.response.items.push(friend);
+                receiver.response.count ++;
             }
         }
 
@@ -149,44 +165,6 @@ function addSelectedFriends(e) {
             e.preventDefault();
         }
 
-    }
-}
-
-function removeSelectedFriends(e) {
-
-    if ((e.target && e.target.tagName == "A")  || 'uid' in e) {
-
-        let item;
-        if (e.target) {
-            item = e.target.parentNode;
-        } else {
-            item = {
-                dataset: {
-                    uid: e.uid
-                }
-            }
-        }
-
-        for (let i = selectedFriends.response.items.length - 1; i >= 0; i--) {
-            let friend = selectedFriends.response.items[i];
-            if (item.dataset.uid == friend.id || e.uid == friend.id ) {
-
-                let index = selectedFriends.response.items.indexOf(friend);
-
-                selectedFriends.response.items.splice(index, 1);
-                selectedFriends.response.count --;
-
-                friends.response.items.push(friend);
-                friends.response.count ++;
-            }
-        }
-
-        reSortFriends();
-        reRenderTemplates();
-        
-        if (e.target) {
-            e.preventDefault();
-        }
     }
 }
 
@@ -196,19 +174,19 @@ function searchEvent() {
     let inputSelectedFriends = document.querySelector('.search-panel__input_right');
 
     inputFriends.addEventListener("input", () => {
-        renderTemplate(searchFriend(friends, inputFriends.value), 'left', 'friendsTemplate');
+        renderTemplate(searchFriend(friends, inputFriends.value), 'left', 'plus');
         });
 
     inputSelectedFriends.addEventListener("input", () => {
-        renderTemplate(searchFriend(selectedFriends, inputSelectedFriends.value), 'right', 'selectedFriendsTemplate');
+        renderTemplate(searchFriend(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
         });
 
 }
 
 
 function reRenderTemplates() {
-    renderTemplate(friends, 'left', 'friendsTemplate');
-    renderTemplate(selectedFriends, 'right', 'selectedFriendsTemplate');
+    renderTemplate(friends, 'left', 'plus');
+    renderTemplate(selectedFriends, 'right', 'remove');
 }
 
 function reSortFriends() {
@@ -228,7 +206,7 @@ function sortFriendsByName(obj) {
 
 function saveData(e) {
     localStorage.setItem('selectedFriends', JSON.stringify(selectedFriends));
-    alert(`Список из ${selectedFriends.response.count} друзей сохранен!`);
+    alert(`List of ${selectedFriends.response.count} friends saved!`);
     e.preventDefault();
 }
 
@@ -245,64 +223,53 @@ function handleDrop(e) {
     // drop on element
     let data = e.dataTransfer.getData('"text/plain');
     let obj = JSON.parse(data);
-
-    console.log(obj);
-
-    addSelectedFriends(obj);
-    removeSelectedFriends(obj);
-
+    
+    moveFriends(obj);
     e.stopPropagation();
     e.preventDefault();
 }
 
 
 function handleDragStart(e) {
-
+    
     if(e.target.className == "list__item"){
         e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('"text/plain', JSON.stringify(e.target.dataset));
+        e.dataTransfer.setData('"text/plain', JSON.stringify(
+            {
+                uid: e.target.dataset.uid,
+                mode: e.target.lastElementChild.className.split('__')[1]
+            }
+        ));
+    }
+}
+
+
+function listsFriendsEvents(lists) {
+    for (let i = 0; i < 2 ; i ++) {
+        lists[i].addEventListener('dragstart', handleDragStart);
+        lists[i].addEventListener('dragover', handleDragOver);
+        lists[i].addEventListener('drop', handleDrop);
+        lists[i].addEventListener('click', moveFriends);
     }
 }
 
 function startApp() {
     
-    reSortFriends();
-    reRenderTemplates();
-
-    searchEvent();
-
     let closeBth = document.querySelector('.filter-app__close');
     let listsFriends = document.querySelectorAll('.list__items');
     let saveBtn = document.querySelector('.button__save');
-
-
-    closeBth.addEventListener('click', (e) => {
-        closeApp(e);
-    });
-
-    saveBtn.addEventListener('click', (e) => {
-        saveData(e);
-    });
-
-    listsFriends[0].addEventListener('dragstart', handleDragStart);
-    listsFriends[0].addEventListener('dragover', handleDragOver);
-    listsFriends[0].addEventListener('drop', handleDrop);
-
-    listsFriends[1].addEventListener('dragstart', handleDragStart);
-    listsFriends[1].addEventListener('dragover', handleDragOver);
-    listsFriends[1].addEventListener('drop', handleDrop);
-
-
-    listsFriends[0].addEventListener('click', (e) => {
-        addSelectedFriends(e);
-    });
-
-    listsFriends[1].addEventListener('click', (e) => {
-        removeSelectedFriends(e);
-    })
+    
+    reSortFriends();
+    reRenderTemplates();
+    
+    searchEvent();
+    
+    closeBth.addEventListener('click', closeApp);
+    saveBtn.addEventListener('click', saveData);
+    
+    listsFriendsEvents(listsFriends);
+    
 }
-
-
 
 // init application
 
@@ -322,7 +289,7 @@ new Promise(function (resolve) {
             if (response.session) {
                 resolve(response);
             } else {
-                reject(new Error('Не удалось авторизоваться'));
+                reject(new Error('Failed to login'));
             }
         }, 2);
     });
@@ -348,5 +315,5 @@ new Promise(function (resolve) {
     startApp(friends);
 
 }).catch(function (e) {
-    alert(`Ошибка: ${e.message}`);
+    alert(`Error: ${e.message}`);
 });
