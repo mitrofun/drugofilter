@@ -9,6 +9,7 @@ let FriendsList = {
 let friends = new Object(FriendsList);
 let selectedFriends = new Object(FriendsList);
 
+
 function itemInObj(item, obj, inObj) {
 
     for (let i = obj.response.items.length - 1; i >= 0; i--) {
@@ -33,18 +34,6 @@ function getFriends(objA, objB) {
 
 }
 
-
-function initData(obj) {
-    // initial list friends
-
-    if (localStorage['selectedFriends']) {
-        selectedFriends =  JSON.parse(localStorage['selectedFriends']);
-        friends = getFriends(obj, selectedFriends);
-    } else {
-        friends = obj;
-    }
-}
-
 function renderTemplate(obj, panel, status) {
 
     // module template (ui)
@@ -60,7 +49,6 @@ function renderTemplate(obj, panel, status) {
     }
 
 }
-
 
 function searchFriend(object, keyword) {
 
@@ -168,33 +156,6 @@ function moveFriends(e) {
     }
 }
 
-function searchEvent() {
-
-    let inputFriends = document.querySelector('.search-panel__input_left');
-    let inputSelectedFriends = document.querySelector('.search-panel__input_right');
-
-    inputFriends.addEventListener("input", () => {
-        renderTemplate(searchFriend(friends, inputFriends.value), 'left', 'plus');
-        });
-
-    inputSelectedFriends.addEventListener("input", () => {
-        renderTemplate(searchFriend(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
-        });
-
-}
-
-
-function reRenderTemplates() {
-    renderTemplate(friends, 'left', 'plus');
-    renderTemplate(selectedFriends, 'right', 'remove');
-}
-
-function reSortFriends() {
-    sortFriendsByName(friends);
-    sortFriendsByName(selectedFriends);
-}
-
-
 function sortFriendsByName(obj) {
     obj.response.items.sort(function(a, b) {
         var x = a['first_name']; var y = b['first_name'];
@@ -210,14 +171,14 @@ function saveData(e) {
     e.preventDefault();
 }
 
-
 function handleDragOver(e) {
-    // on element
-    if (e.preventDefault) {
-        e.preventDefault();
-    }
-}
+  if (e.preventDefault) {
+    e.preventDefault(); // Necessary. Allows us to drop.
+  }
+  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
+  return false;
+}
 
 function handleDrop(e) {
     // drop on element
@@ -228,7 +189,6 @@ function handleDrop(e) {
     e.stopPropagation();
     e.preventDefault();
 }
-
 
 function handleDragStart(e) {
     
@@ -243,7 +203,6 @@ function handleDragStart(e) {
     }
 }
 
-
 function listsFriendsEvents(lists) {
     for (let i = 0; i < 2 ; i ++) {
         lists[i].addEventListener('dragstart', handleDragStart);
@@ -253,22 +212,63 @@ function listsFriendsEvents(lists) {
     }
 }
 
-function startApp() {
-    
+function extraBtnEvents() {
+
     let closeBth = document.querySelector('.filter-app__close');
-    let listsFriends = document.querySelectorAll('.list__items');
     let saveBtn = document.querySelector('.button__save');
-    
-    reSortFriends();
-    reRenderTemplates();
-    
-    searchEvent();
-    
+
     closeBth.addEventListener('click', closeApp);
     saveBtn.addEventListener('click', saveData);
-    
-    listsFriendsEvents(listsFriends);
-    
+}
+
+function searchEvents() {
+
+    let inputFriends = document.querySelector('.search-panel__input_left');
+    let inputSelectedFriends = document.querySelector('.search-panel__input_right');
+
+    inputFriends.addEventListener("input", () => {
+        renderTemplate(searchFriend(friends, inputFriends.value), 'left', 'plus');
+    });
+
+    inputSelectedFriends.addEventListener("input", () => {
+        renderTemplate(searchFriend(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
+    });
+}
+
+function reRenderTemplates() {
+    renderTemplate(friends, 'left', 'plus');
+    renderTemplate(selectedFriends, 'right', 'remove');
+}
+
+function reSortFriends() {
+    sortFriendsByName(friends);
+    sortFriendsByName(selectedFriends);
+}
+
+function startApp() {
+
+    reSortFriends();
+    reRenderTemplates();
+
+     // Events
+
+    let listsFriends = document.querySelectorAll('.list__items');
+
+    searchEvents();
+    listsFriendsEvents(listsFriends); // move friends events
+    extraBtnEvents(); // events save & exit btn
+}
+
+function initData(obj) {
+
+    // initial lists of friends
+
+    if (localStorage['selectedFriends']) {
+        selectedFriends =  JSON.parse(localStorage['selectedFriends']);
+        friends = getFriends(obj, selectedFriends);
+    } else {
+        friends = obj;
+    }
 }
 
 // init application
