@@ -92,7 +92,7 @@ function closeApp(e) {
 
     listsFriends[0].innerHTML = '';
     listsFriends[1].innerHTML = '';
-    clearInputs()
+    clearInputs();
     
     VK.Auth.logout();
     alert('You leave the app!');
