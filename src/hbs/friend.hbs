@@ -1,0 +1,5 @@
+{{#each friend}}
+  <div draggable="true" data-uid="{{id}}" class="list__item"><img draggable="false" src="{{photo_50}}" class="list__avatar">
+    <div class="list__name">{{first_name}} {{last_name}}</div><a href="javascript:void(0);" draggable="false" class="list__{{../mode}}"></a>
+  </div>
+{{/each}}

@@ -13,11 +13,18 @@ gulp.task('webpack', function() {
 
   let options = {
     module:  {
-      loaders: [{
-        test:    /\.js$/,
-        exclude: /node_modules/,
-        loader:  'babel?presets[]=es2015'
-      }]
+      loaders: [
+        {
+          test:    /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader:  'babel?presets[]=es2015'
+        },
+        {
+          test: /\.hbs/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'handlebars-loader'
+        }
+      ]
     },
     plugins: [
       new webpack.NoErrorsPlugin()

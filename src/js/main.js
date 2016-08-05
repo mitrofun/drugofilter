@@ -1,6 +1,6 @@
 import { getFoundObjs } from './modules/search'
-import { renderTemplate, renderObjTemplates, clearInputs } from './modules/ui'
-import { getDifObj, sortingObjByFirstName} from './modules/data'
+import { renderTemplate, renderObjTemplates, closeApp } from './modules/ui'
+import { getDifObj, sortingObjByFirstName, saveData } from './modules/data'
 import { handleDragOver, handleDrop, handleDragStart } from './modules/dnd'
 import { moveFriends } from './modules/move'
 
@@ -15,29 +15,9 @@ let friends = new Object(FriendsList);
 let selectedFriends = new Object(FriendsList);
 
 
-
-function closeApp(e) {
-
-    let listsFriends = document.querySelectorAll('.list__items');
-
-    listsFriends[0].innerHTML = '';
-    listsFriends[1].innerHTML = '';
-    clearInputs();
-    VK.Auth.logout();
-    alert('You leave the app!');
-    e.preventDefault();
-}
-
-function saveData(e) {
-    localStorage.setItem('selectedFriends', JSON.stringify(selectedFriends));
-    alert(`List of ${selectedFriends.response.count} friends saved!`);
-    e.preventDefault();
-}
-
-
-
 function listsFriendsEvents(lists) {
     for (let i = 0; i < 2 ; i ++) {
+
         lists[i].addEventListener('dragstart', handleDragStart);
         lists[i].addEventListener('dragover', handleDragOver);
         lists[i].addEventListener('drop', (e) => {
@@ -49,30 +29,7 @@ function listsFriendsEvents(lists) {
     }
 }
 
-function extraBtnEvents() {
-
-    let closeBth = document.querySelector('.filter-app__close');
-    let saveBtn = document.querySelector('.button__save');
-
-    closeBth.addEventListener('click', closeApp);
-    saveBtn.addEventListener('click', saveData);
-}
-
-function searchEvents() {
-
-    let inputFriends = document.querySelector('.search-panel__input_left');
-    let inputSelectedFriends = document.querySelector('.search-panel__input_right');
-
-    inputFriends.addEventListener("input", () => {
-        renderTemplate(getFoundObjs(friends, inputFriends.value), 'left', 'plus');
-    });
-
-    inputSelectedFriends.addEventListener("input", () => {
-        renderTemplate(getFoundObjs(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
-    });
-}
-
-function startApp() {
+function initApp() {
 
     sortingObjByFirstName(friends, selectedFriends);
     renderObjTemplates(friends, selectedFriends);
@@ -80,10 +37,22 @@ function startApp() {
      // Events
 
     let listsFriends = document.querySelectorAll('.list__items');
+    let inputFriends = document.querySelector('.search-panel__input_left');
+    let inputSelectedFriends = document.querySelector('.search-panel__input_right');
+    let closeBth = document.querySelector('.filter-app__close');
+    let saveBtn = document.querySelector('.button__save');
 
-    searchEvents();
     listsFriendsEvents(listsFriends); // move friends events
-    extraBtnEvents(); // events save & exit btn
+    inputFriends.addEventListener("input", () => {
+        renderTemplate(getFoundObjs(friends, inputFriends.value), 'left', 'plus');
+    });
+    inputSelectedFriends.addEventListener("input", () => {
+        renderTemplate(getFoundObjs(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
+    });
+    closeBth.addEventListener('click', closeApp);
+    saveBtn.addEventListener('click', (e) => {
+        saveData(e, selectedFriends)
+    });
 }
 
 function initData(obj) {
@@ -139,7 +108,7 @@ new Promise(function (resolve) {
 
 }).then(() => {
 
-    startApp(friends);
+    initApp(friends);
 
 }).catch(function (e) {
     alert(`Error: ${e.message}`);

@@ -37,4 +37,10 @@ function sortingObjByFirstName(objA, ObjB) {
     }
 }
 
-export { getDifObj, sortingObjByFirstName}
+function saveData(e, obj) {
+    localStorage.setItem('selectedFriends', JSON.stringify(obj));
+    alert(`List of ${obj.response.count} friends saved!`);
+    e.preventDefault();
+}
+
+export { getDifObj, sortingObjByFirstName, saveData}
