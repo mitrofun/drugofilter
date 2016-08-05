@@ -1,4 +1,7 @@
-// global list obj
+import { getFoundObjs } from './modules/search'
+import { renderTemplate, clearInputs } from './modules/ui'
+import { getDifObj , sortByField} from './modules/data'
+
 let FriendsList = {
       response: {
         count: 0,
@@ -9,112 +12,8 @@ let FriendsList = {
 let friends = new Object(FriendsList);
 let selectedFriends = new Object(FriendsList);
 
-
-function itemInObj(item, obj, inObj) {
-
-    for (let i = obj.response.items.length - 1; i >= 0; i--) {
-
-        if (item.id == obj.response.items[i].id) {
-            return inObj.response.items.indexOf(item);
-        }
-    }
-}
-
-function getFriends(objA, objB) {
-
-    for (let i = objA.response.items.length - 1; i >= 0; i--) {
-        let friend = objA.response.items[i];
-        let index = itemInObj(friend, objB, objA);
-
-        if (index) {
-            objA.response.items.splice(index, 1);
-        }
-    }
-    return objA;
-}
-
-function renderTemplate(obj, panel, status) {
-
-    // module ui (template)
-
-    if (obj.response) {
-
-        let friendsTemplate = document.getElementById('template');
-        let friendsList = document.querySelector(`.friend-lists__list_${panel} .list__items`);
-
-        let source = friendsTemplate.innerHTML;
-        let template = Handlebars.compile(source);
-        friendsList.innerHTML = template({friend: obj.response.items, mode: status});
-    }
-
-}
-
-function searchFriend(object, keyword) {
-
-    // module ui (search)
-
-    let array = [];
-
-    let obj = {
-        response: {
-            count: 0,
-            items: []
-        }
-    };
-
-    if (keyword.length == 0 || keyword == ' ') {
-        return object;
-    }
-
-    for (let i = 0; i < object.response.items.length; i++) {
-            let re = new RegExp(keyword, "i");
-            let item = object.response.items[i];
-
-            if (re.test(item["first_name"]) || re.test(item["last_name"])) {
-                array.push(item);
-            }
-    }
-
-    if (keyword.length > 0 && !array.length) {
-        array = [];
-    }
-
-    obj.response.items = array;
-    obj.response.count = array.length;
-
-    return obj;
-}
-
-
-function closeApp(e) {
-
-    let listsFriends = document.querySelectorAll('.list__items');
-
-    listsFriends[0].innerHTML = '';
-    listsFriends[1].innerHTML = '';
-    clearInputs();
-    
-    VK.Auth.logout();
-    alert('You leave the app!');
-    e.preventDefault();
-}
-
-
-function clearInputs() {
-
-    // module ui (inputs)
-
-    let inputs = document.querySelectorAll('input');
-
-    for (let i=0; i< inputs.length; i++) {
-        if (inputs[i].value) {
-            inputs[i].value = '';
-        }
-    }
-}
-
 function moveFriends(e) {
-    
+
     if (e.target && e.target.tagName == "A" || e.uid) {
 
         let item, mode;
@@ -140,7 +39,6 @@ function moveFriends(e) {
             source = selectedFriends;
             receiver = friends;
         }
-
 
         for (let i = source.response.items.length - 1; i >= 0; i--) {
 
@@ -168,13 +66,16 @@ function moveFriends(e) {
     }
 }
 
-function sortFriendsByName(obj) {
-    obj.response.items.sort(function(a, b) {
-        var x = a['first_name']; var y = b['first_name'];
-        if (x < y) return -1;
-        if (x > y) return 1;
-        else return 0;
-    });
+function closeApp(e) {
+
+    let listsFriends = document.querySelectorAll('.list__items');
+
+    listsFriends[0].innerHTML = '';
+    listsFriends[1].innerHTML = '';
+    clearInputs();
+    VK.Auth.logout();
+    alert('You leave the app!');
+    e.preventDefault();
 }
 
 function saveData(e) {
@@ -239,11 +140,11 @@ function searchEvents() {
     let inputSelectedFriends = document.querySelector('.search-panel__input_right');
 
     inputFriends.addEventListener("input", () => {
-        renderTemplate(searchFriend(friends, inputFriends.value), 'left', 'plus');
+        renderTemplate(getFoundObjs(friends, inputFriends.value), 'left', 'plus');
     });
 
     inputSelectedFriends.addEventListener("input", () => {
-        renderTemplate(searchFriend(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
+        renderTemplate(getFoundObjs(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
     });
 }
 
@@ -253,8 +154,8 @@ function reRenderTemplates() {
 }
 
 function reSortFriends() {
-    sortFriendsByName(friends);
-    sortFriendsByName(selectedFriends);
+    sortByField(friends, 'first_name');
+    sortByField(selectedFriends, 'first_name');
 }
 
 function startApp() {
@@ -277,7 +178,7 @@ function initData(obj) {
 
     if (localStorage['selectedFriends']) {
         selectedFriends =  JSON.parse(localStorage['selectedFriends']);
-        friends = getFriends(obj, selectedFriends);
+        friends = getDifObj(obj, selectedFriends);
     } else {
         friends = obj;
     }

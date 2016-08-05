@@ -5,9 +5,9 @@ const dirs = pkg['app-configs'].directories;
 
 gulp.task('connect', function () {
     browserSync.init({
-        server: `${dirs.src}`
+        server: `${dirs.dist}`
     });
-    browserSync.watch('src/css/*.css', function (event, file) {
+    browserSync.watch(`${dirs.src}/css/*.css`, function (event, file) {
          if (event === 'change') {
              browserSync.reload('*.css;');
          }

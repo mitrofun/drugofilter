@@ -24,7 +24,7 @@ gulp.task('webpack', function() {
     ]
   };
 
-  return gulp.src(`${dirs.src}/js`)
+  return gulp.src(`${dirs.src}/js/*.js`)
       .pipe(plumber({
         errorHandler: notify.onError(err => ({
           title:   'Webpack',

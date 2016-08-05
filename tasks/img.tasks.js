@@ -6,7 +6,7 @@ import imagemin from 'gulp-imagemin';
 import pngquant from 'imagemin-pngquant';
 
 gulp.task('img', () => {
-    gulp.src(`${dirs.src}/img/**/*`)
+    gulp.src(`${dirs.src}/img/*`)
         .pipe(imagemin({
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
