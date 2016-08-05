@@ -2,7 +2,7 @@
 import gulp from 'gulp';
 import requireDir from 'require-dir';
 import runSequence from 'run-sequence';
-
+import del from 'del';
 import pkg from './package.json';
 const dirs = pkg['app-configs'].directories;
 
@@ -10,17 +10,19 @@ const dirs = pkg['app-configs'].directories;
 requireDir('./tasks', {recurse: true});
 
 // Tasks
-
-gulp.task('develop', () => {
-	global.production = false;
-	runSequence("jade", "sass", "js");
+gulp.task('build', () => {
+	runSequence("jade", "sass", "webpack", "misc", "watch", "img");
 });
 
+// Watcher
 gulp.task('watch', () => {
     gulp.watch(`${dirs.src}/sass/**/*.scss`, ["sass"]);
     gulp.watch(`${dirs.src}/**/*.jade`, ["jade"]);
-    gulp.watch(`${dirs.src}/js/**/*.js`, ["js"]);
+    gulp.watch(`${dirs.src}/js/**/*.js`, ["webpack"]);
 });
 
+gulp.task('clean', function() {
+  return del(`${dirs.dist}`);
+});
 
-gulp.task('default', ['develop', 'watch', 'connect']);
+gulp.task('default', ['build', 'watch', 'connect']);

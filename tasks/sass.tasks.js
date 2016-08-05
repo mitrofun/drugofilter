@@ -11,5 +11,5 @@ gulp.task('sass', () => {
         css: `${dirs.src}/css`,
         sass: `${dirs.src}/sass`
       }))
-    .pipe(gulp.dest(`${dirs.src}/css`))
+    .pipe(gulp.dest(`${dirs.dist}/css`))
 });

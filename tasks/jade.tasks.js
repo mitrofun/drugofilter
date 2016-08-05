@@ -9,5 +9,5 @@ gulp.task('jade', () => {
         .pipe(debug({title: `${dirs.src}`}))
         .pipe(jade({pretty: true}))
         .pipe(debug({title: 'jade'}))
-        .pipe(gulp.dest(`${dirs.src}`))
+        .pipe(gulp.dest(`${dirs.dist}`))
 });

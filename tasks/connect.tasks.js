@@ -13,6 +13,7 @@ gulp.task('connect', function () {
          }
     });
     browserSync.watch(`${dirs.src}/*.html`).on('change', browserSync.reload);
+    browserSync.watch(`${dirs.src}/jade/**/*.jade`).on('change', browserSync.reload);
     browserSync.watch(`${dirs.src}/css/*.css`).on('change', browserSync.reload);
-    // browserSync.watch(`${dirs.src}/js/**/*.js`).on('change', browserSync.reload);
+    browserSync.watch(`${dirs.src}/js/**/*.js`).on('change', browserSync.reload);
 });

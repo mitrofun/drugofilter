@@ -31,12 +31,19 @@
     "babel-preset-stage-3": "^6.11.0",
     "babel-register": "^6.11.6",
     "browser-sync": "^2.14.0",
+    "del": "^2.2.1",
     "gulp": "^3.9.1",
     "gulp-compass": "^2.1.0",
     "gulp-debug": "^2.1.2",
+    "gulp-imagemin": "^3.0.2",
     "gulp-jade": "^1.1.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "imagemin-pngquant": "^5.0.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.2.2",
-    "webpack": "^2.1.0-beta.19"
+    "vinyl-named": "^1.1.0",
+    "webpack": "^2.1.0-beta.19",
+    "webpack-stream": "^3.2.0"
   }
 }
