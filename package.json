@@ -1,20 +1,20 @@
 {
   "name": "vk-friends-js",
   "version": "1.0.0",
-  "description": "simple app with vk sdk",
+  "description": "drugofilter app vk sdk",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mitrofun/vk-friends-js.git"
+    "url": "git+https://github.com/mitrofun/drugofilter.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mitrofun/vk-friends-js/issues"
+    "url": "https://github.com/mitrofun/drugofilter/issues"
   },
   "app-configs": {
     "directories": {
@@ -22,7 +22,7 @@
       "src": "src"
     }
   },
-  "homepage": "https://github.com/mitrofun/vk-friends-js#readme",
+  "homepage": "https://github.com/mitrofun/drugofilter#readme",
   "devDependencies": {
     "babel-core": "^6.13.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
@@ -37,6 +37,6 @@
     "gulp-jade": "^1.1.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.2.2",
-    "webpack": "^1.13.1"
+    "webpack": "^2.1.0-beta.19"
   }
 }

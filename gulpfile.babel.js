@@ -13,13 +13,13 @@ requireDir('./tasks', {recurse: true});
 
 gulp.task('develop', () => {
 	global.production = false;
-	runSequence("jade", "sass");
+	runSequence("jade", "sass", "js");
 });
 
 gulp.task('watch', () => {
     gulp.watch(`${dirs.src}/sass/**/*.scss`, ["sass"]);
     gulp.watch(`${dirs.src}/**/*.jade`, ["jade"]);
-    // gulp.watch(`${dirs.src}/js/**/*.js`, ["js"]);
+    gulp.watch(`${dirs.src}/js/**/*.js`, ["js"]);
 });
 
 
