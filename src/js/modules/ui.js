@@ -25,4 +25,10 @@ function clearInputs() {
     }
 }
 
-export { renderTemplate, clearInputs }
+function renderObjTemplates(objA, oblB) {
+
+    renderTemplate(objA, 'left', 'plus');
+    renderTemplate(oblB, 'right', 'remove');
+}
+
+export { renderTemplate, clearInputs , renderObjTemplates}

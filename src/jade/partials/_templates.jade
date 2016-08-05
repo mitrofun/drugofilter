@@ -3,5 +3,5 @@ script(type="text/x-handlebars-template" id="template")
 	.list__item(draggable="true" data-uid="{{id}}")
 		img.list__avatar(draggable="false" src="{{photo_50}}")
 		.list__name {{first_name}} {{last_name}}
-		a(href="javascript:void(0);" class="list__{{../mode}}")
+		a(href="javascript:void(0);" class="list__{{../mode}}" draggable="false")
 	{{/each}}

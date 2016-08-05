@@ -30,4 +30,11 @@ function sortByField(obj, field) {
     });
 }
 
-export { getDifObj, sortByField }
+function sortingObjByFirstName(objA, ObjB) {
+
+    for(let i = 0; i < arguments.length; i++) {
+        sortByField(arguments[i], 'first_name');
+    }
+}
+
+export { getDifObj, sortingObjByFirstName}

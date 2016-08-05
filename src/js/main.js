@@ -1,6 +1,8 @@
 import { getFoundObjs } from './modules/search'
-import { renderTemplate, clearInputs } from './modules/ui'
-import { getDifObj , sortByField} from './modules/data'
+import { renderTemplate, renderObjTemplates, clearInputs } from './modules/ui'
+import { getDifObj, sortingObjByFirstName} from './modules/data'
+import { handleDragOver, handleDrop, handleDragStart } from './modules/dnd'
+import { moveFriends } from './modules/move'
 
 let FriendsList = {
       response: {
@@ -12,59 +14,7 @@ let FriendsList = {
 let friends = new Object(FriendsList);
 let selectedFriends = new Object(FriendsList);
 
-function moveFriends(e) {
 
-    if (e.target && e.target.tagName == "A" || e.uid) {
-
-        let item, mode;
-
-        if (e.target) {
-            item = e.target.parentNode;
-            mode = e.target.className.split('__')[1];
-        } else {
-            item = {
-                dataset: {
-                    uid: e.uid
-                }
-            };
-            mode = e.mode;
-        }
-
-        let source, receiver;
-
-        if (mode == 'plus') {
-            source = friends;
-            receiver = selectedFriends;
-        } else if (mode == 'remove') {
-            source = selectedFriends;
-            receiver = friends;
-        }
-
-        for (let i = source.response.items.length - 1; i >= 0; i--) {
-
-            let friend = source.response.items[i];
-
-            if (item.dataset.uid == friend.id) {
-
-                let index = source.response.items.indexOf(friend);
-
-                source.response.items.splice(index, 1);
-                source.response.count --;
-
-                receiver.response.items.push(friend);
-                receiver.response.count ++;
-            }
-        }
-
-        reSortFriends();
-        reRenderTemplates();
-        clearInputs();
-
-        if (e.target) {
-            e.preventDefault();
-        }
-    }
-}
 
 function closeApp(e) {
 
@@ -84,44 +34,18 @@ function saveData(e) {
     e.preventDefault();
 }
 
-function handleDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault(); // Necessary. Allows us to drop.
-  }
-  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
-  return false;
-}
-
-function handleDrop(e) {
-    // drop on element
-    let data = e.dataTransfer.getData('"text/plain');
-    let obj = JSON.parse(data);
-    
-    moveFriends(obj);
-    e.stopPropagation();
-    e.preventDefault();
-}
-
-function handleDragStart(e) {
-    
-    if(e.target.className == "list__item"){
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('"text/plain', JSON.stringify(
-            {
-                uid: e.target.dataset.uid,
-                mode: e.target.lastElementChild.className.split('__')[1]
-            }
-        ));
-    }
-}
 
 function listsFriendsEvents(lists) {
     for (let i = 0; i < 2 ; i ++) {
         lists[i].addEventListener('dragstart', handleDragStart);
         lists[i].addEventListener('dragover', handleDragOver);
-        lists[i].addEventListener('drop', handleDrop);
-        lists[i].addEventListener('click', moveFriends);
+        lists[i].addEventListener('drop', (e) => {
+            handleDrop(e, friends, selectedFriends)
+        });
+        lists[i].addEventListener('click', (e) => {
+            moveFriends(e, friends, selectedFriends)
+        });
     }
 }
 
@@ -148,20 +72,10 @@ function searchEvents() {
     });
 }
 
-function reRenderTemplates() {
-    renderTemplate(friends, 'left', 'plus');
-    renderTemplate(selectedFriends, 'right', 'remove');
-}
-
-function reSortFriends() {
-    sortByField(friends, 'first_name');
-    sortByField(selectedFriends, 'first_name');
-}
-
 function startApp() {
 
-    reSortFriends();
-    reRenderTemplates();
+    sortingObjByFirstName(friends, selectedFriends);
+    renderObjTemplates(friends, selectedFriends);
 
      // Events
 
