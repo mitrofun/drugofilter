@@ -1,6 +1,6 @@
 # drugofilter
 
-
+A small application to explore the sdk vk on javascript
 
 ###Installation & Run
 
