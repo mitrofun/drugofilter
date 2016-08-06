@@ -31,14 +31,13 @@ function sortByField(obj, field) {
 }
 
 function sortingObjByFirstName(objA, ObjB) {
-
-    for(let i = 0; i < arguments.length; i++) {
+    for (let i = arguments.length - 1; i >= 0; i--) {
         sortByField(arguments[i], 'first_name');
     }
 }
 
-function saveData(e, obj) {
-    localStorage.setItem('selectedFriends', JSON.stringify(obj));
+function saveData(e, obj, key) {
+    localStorage.setItem(key, JSON.stringify(obj));
     alert(`List of ${obj.response.count} friends saved!`);
     e.preventDefault();
 }

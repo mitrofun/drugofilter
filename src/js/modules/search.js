@@ -12,8 +12,8 @@ function getFoundObjs(object, keyword) {
     if (keyword.length == 0 || keyword == ' ') {
         return object;
     }
-
-    for (let i = 0; i < object.response.items.length; i++) {
+    
+    for (let i = object.response.items.length - 1; i >= 0 ; i--) {
             let re = new RegExp(keyword, "i");
             let item = object.response.items[i];
 

@@ -1,6 +1,6 @@
-import {renderObjTemplates, clearInputs} from './ui'
-import {sortingObjByFirstName} from './data'
-
+import { renderObjTemplates, renderTemplate } from './ui'
+import { sortingObjByFirstName } from './data'
+import { getFoundObjs } from './search'
 
 function moveFriends(e, objA, objB) {
 
@@ -46,10 +46,21 @@ function moveFriends(e, objA, objB) {
             }
         }
 
-        sortingObjByFirstName(objA, objB);
-        renderObjTemplates(objA, objB);
-        clearInputs();
+        let inputFriends = document.querySelector('.search-panel__input_left');
+        let inputSelectedFriends = document.querySelector('.search-panel__input_right');
 
+        sortingObjByFirstName(objA, objB);
+
+        if (inputFriends.value) {
+            renderTemplate(getFoundObjs(objA, inputFriends.value), 'left', 'plus');
+            renderTemplate(objB, 'right', 'remove');
+        } else if (inputSelectedFriends.value) {
+            renderTemplate(getFoundObjs(objB, inputSelectedFriends.value), 'right', 'remove');
+            renderTemplate(objA, 'left', 'plus');
+        } else {
+            renderObjTemplates(objA, objB);
+        }
+        
         if (e.target) {
             e.preventDefault();
         }

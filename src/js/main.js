@@ -13,17 +13,20 @@ let FriendsList = {
 
 let friends = new Object(FriendsList);
 let selectedFriends = new Object(FriendsList);
+let userId = 0;
 
 
 function listsFriendsEvents(lists) {
-    for (let i = 0; i < 2 ; i ++) {
 
-        lists[i].addEventListener('dragstart', handleDragStart);
-        lists[i].addEventListener('dragover', handleDragOver);
-        lists[i].addEventListener('drop', (e) => {
+    for (let i = lists.length - 1; i >= 0 ; i--) {
+        let el = lists[i];
+        
+        el.addEventListener('dragstart', handleDragStart);
+        el.addEventListener('dragover', handleDragOver);
+        el.addEventListener('drop', (e) => {
             handleDrop(e, friends, selectedFriends)
         });
-        lists[i].addEventListener('click', (e) => {
+        el.addEventListener('click', (e) => {
             moveFriends(e, friends, selectedFriends)
         });
     }
@@ -43,24 +46,26 @@ function initApp() {
     let saveBtn = document.querySelector('.button__save');
 
     listsFriendsEvents(listsFriends); // move friends events
+    
     inputFriends.addEventListener("input", () => {
         renderTemplate(getFoundObjs(friends, inputFriends.value), 'left', 'plus');
     });
     inputSelectedFriends.addEventListener("input", () => {
         renderTemplate(getFoundObjs(selectedFriends, inputSelectedFriends.value), 'right', 'remove');
     });
+    
     closeBth.addEventListener('click', closeApp);
     saveBtn.addEventListener('click', (e) => {
-        saveData(e, selectedFriends)
+        saveData(e, selectedFriends, userId)
     });
 }
 
 function initData(obj) {
-
+ 
     // initial lists of friends
 
-    if (localStorage['selectedFriends']) {
-        selectedFriends =  JSON.parse(localStorage['selectedFriends']);
+    if (localStorage[`${userId}`]) {
+        selectedFriends =  JSON.parse(localStorage[`${userId}`]);
         friends = getDifObj(obj, selectedFriends);
     } else {
         friends = obj;
@@ -83,6 +88,7 @@ new Promise(function (resolve) {
 
         VK.Auth.login(function (response) {
             if (response.session) {
+                userId = response.session.user.id;
                 resolve(response);
             } else {
                 reject(new Error('Failed to login'));
@@ -97,6 +103,7 @@ new Promise(function (resolve) {
             if (serverAnswer.error) {
                 reject(new Error(serverAnswer.error.error_msg));
             } else {
+
                 resolve(serverAnswer);
             }
         });
